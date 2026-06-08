@@ -136,25 +136,25 @@ class AttendanceController extends Controller
         if ($user->isTeacher()) {
             $stats = $user->teacher->attendances()
                 ->byDateRange($startDate, $endDate)
-                ->selectRaw('
+                ->selectRaw("
                     COUNT(*) as total_days,
-                    SUM(CASE WHEN status IN ("present", "late") THEN 1 ELSE 0 END) as present_days,
-                    SUM(CASE WHEN status = "absent" THEN 1 ELSE 0 END) as absent_days,
-                    SUM(CASE WHEN status = "late" THEN 1 ELSE 0 END) as late_days,
-                    SUM(CASE WHEN status = "sick" THEN 1 ELSE 0 END) as sick_days,
-                    SUM(CASE WHEN status = "leave" THEN 1 ELSE 0 END) as leave_days
-                ')
+                    SUM(CASE WHEN status IN ('present', 'late') THEN 1 ELSE 0 END) as present_days,
+                    SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) as absent_days,
+                    SUM(CASE WHEN status = 'late' THEN 1 ELSE 0 END) as late_days,
+                    SUM(CASE WHEN status = 'sick' THEN 1 ELSE 0 END) as sick_days,
+                    SUM(CASE WHEN status = 'leave' THEN 1 ELSE 0 END) as leave_days
+                ")
                 ->first();
         } else {
             $stats = Attendance::byDateRange($startDate, $endDate)
-                ->selectRaw('
+                ->selectRaw("
                     COUNT(*) as total_days,
-                    SUM(CASE WHEN status IN ("present", "late") THEN 1 ELSE 0 END) as present_days,
-                    SUM(CASE WHEN status = "absent" THEN 1 ELSE 0 END) as absent_days,
-                    SUM(CASE WHEN status = "late" THEN 1 ELSE 0 END) as late_days,
-                    SUM(CASE WHEN status = "sick" THEN 1 ELSE 0 END) as sick_days,
-                    SUM(CASE WHEN status = "leave" THEN 1 ELSE 0 END) as leave_days
-                ')
+                    SUM(CASE WHEN status IN ('present', 'late') THEN 1 ELSE 0 END) as present_days,
+                    SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) as absent_days,
+                    SUM(CASE WHEN status = 'late' THEN 1 ELSE 0 END) as late_days,
+                    SUM(CASE WHEN status = 'sick' THEN 1 ELSE 0 END) as sick_days,
+                    SUM(CASE WHEN status = 'leave' THEN 1 ELSE 0 END) as leave_days
+                ")
                 ->first();
         }
 

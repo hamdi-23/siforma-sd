@@ -107,9 +107,9 @@
                                         </a>
                                     @endif
                                     @if($report->status === 'submitted' && (Auth::user()->isAdmin() || Auth::user()->isPrincipal()))
-                                        <form action="{{ route('daily-report.review', $report) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('daily-report.review', $report) }}" method="POST" class="d-inline form-confirm-save">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-success" title="Review" onclick="return confirm('Review laporan ini?')">
+                                            <button type="submit" class="btn btn-sm btn-success" title="Review">
                                                 <i class="fas fa-check"></i>
                                             </button>
                                         </form>

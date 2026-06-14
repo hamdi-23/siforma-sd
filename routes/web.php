@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DailyReportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\MonthlyRecapController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -53,10 +57,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [AttendanceController::class, 'index'])->name('index');
         Route::get('/create', [AttendanceController::class, 'create'])->name('create');
         Route::post('/', [AttendanceController::class, 'store'])->name('store');
+        Route::get('/export/excel', [AttendanceController::class, 'exportExcel'])->name('export.excel');
+        Route::get('/export/pdf', [AttendanceController::class, 'exportPdf'])->name('export.pdf');
         Route::get('/statistics', [AttendanceController::class, 'statistics'])->name('statistics');
         Route::get('/{attendance}', [AttendanceController::class, 'show'])->name('show');
         Route::get('/{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
         Route::put('/{attendance}', [AttendanceController::class, 'update'])->name('update');
+        Route::post('/{attendance}/checkout', [AttendanceController::class, 'checkout'])->name('checkout');
     });
 
     // Daily Report routes
@@ -81,4 +88,22 @@ Route::middleware('auth')->group(function () {
             Route::post('/generate-all/{year}/{month}', [MonthlyRecapController::class, 'generateAll'])->name('generate-all');
         });
     });
+
+    // Classroom Master Data (admin/principal only)
+    Route::middleware('admin.principal')->group(function () {
+        Route::resource('classrooms', ClassroomController::class)
+            ->names('classroom')
+            ->except(['show']);
+
+        Route::resource('teachers', TeacherController::class)
+            ->except(['show']);
+
+        // Settings
+        Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
+        Route::post('/setting', [SettingController::class, 'store'])->name('setting.store');
+    });
+
+    // Exports History (accessible by all authenticated users)
+    Route::get('/exports', [App\Http\Controllers\DataExportController::class, 'index'])->name('exports.index');
+    Route::get('/exports/{export}/download', [App\Http\Controllers\DataExportController::class, 'download'])->name('exports.download');
 });

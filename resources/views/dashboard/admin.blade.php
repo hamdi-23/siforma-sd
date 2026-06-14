@@ -45,10 +45,10 @@
     }
 
     .modern-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
+        background: var(--app-card-bg);
+        border: 1px solid var(--app-border);
         border-radius: 14px;
-        box-shadow: 0 16px 40px rgba(15, 23, 42, .06);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .06);
     }
 
     .metric-card {
@@ -66,7 +66,7 @@
     }
 
     .metric-value {
-        color: #0f172a;
+        color: var(--app-dark);
         font-size: 2rem;
         font-weight: 800;
         line-height: 1;
@@ -74,7 +74,7 @@
     }
 
     .metric-label {
-        color: #64748b;
+        color: var(--app-muted);
         font-size: .9rem;
         font-weight: 700;
         margin-top: 8px;
@@ -85,7 +85,7 @@
     }
 
     .section-title {
-        color: #0f172a;
+        color: var(--app-dark);
         font-size: 1.1rem;
         font-weight: 800;
         margin: 0;
@@ -93,7 +93,7 @@
 
     .soft-row {
         align-items: center;
-        border: 1px solid #edf2f7;
+        border: 1px solid var(--app-border);
         border-radius: 12px;
         display: grid;
         gap: 12px;
@@ -104,9 +104,9 @@
 
     .quick-action {
         align-items: center;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--app-border);
         border-radius: 12px;
-        color: #0f172a;
+        color: var(--app-dark);
         display: flex;
         font-weight: 700;
         gap: 12px;
@@ -204,7 +204,7 @@
                     @foreach($lowAttendanceTeachers as $teacher)
                         <div class="soft-row">
                             <div>
-                                <div class="fw-bold text-dark">{{ $teacher->user->name }}</div>
+                                <div class="fw-bold">{{ $teacher->user->name }}</div>
                                 <div class="text-muted small">NIP: {{ $teacher->nip ?? '-' }}</div>
                             </div>
                             <div>

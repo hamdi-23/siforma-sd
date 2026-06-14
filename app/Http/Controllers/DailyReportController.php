@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use App\Models\DailyReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DailyReportController extends Controller
 {
@@ -40,7 +42,8 @@ class DailyReportController extends Controller
             abort(403);
         }
 
-        return view('daily-report.create');
+        $classrooms = Classroom::orderBy('name')->get();
+        return view('daily-report.create', compact('classrooms'));
     }
 
     /**
@@ -54,15 +57,15 @@ class DailyReportController extends Controller
         }
 
         $validated = $request->validate([
-            'report_date' => 'required|date',
+            'report_date' => [
+                'required',
+                'date',
+                Rule::unique('daily_reports')->where(function ($query) use ($user) {
+                    return $query->where('teacher_id', $user->teacher->id);
+                })
+            ],
             'class' => 'required|string|max:50',
-            'learning_objectives' => 'required|string',
             'learning_materials' => 'required|string',
-            'teaching_methods' => 'required|string',
-            'student_response' => 'nullable|string',
-            'assignments_given' => 'nullable|string',
-            'attendance_count' => 'nullable|integer|min:0',
-            'total_students' => 'nullable|integer|min:0',
             'notes' => 'nullable|string',
             'material_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:10240', // max 10MB
         ]);
@@ -122,7 +125,8 @@ class DailyReportController extends Controller
             abort(403);
         }
 
-        return view('daily-report.edit', compact('dailyReport'));
+        $classrooms = Classroom::orderBy('name')->get();
+        return view('daily-report.edit', compact('dailyReport', 'classrooms'));
     }
 
     /**
@@ -143,13 +147,7 @@ class DailyReportController extends Controller
 
         $validated = $request->validate([
             'class' => 'required|string|max:50',
-            'learning_objectives' => 'required|string',
             'learning_materials' => 'required|string',
-            'teaching_methods' => 'required|string',
-            'student_response' => 'nullable|string',
-            'assignments_given' => 'nullable|string',
-            'attendance_count' => 'nullable|integer|min:0',
-            'total_students' => 'nullable|integer|min:0',
             'notes' => 'nullable|string',
             'material_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:10240',
         ]);
@@ -192,6 +190,11 @@ class DailyReportController extends Controller
         $user = Auth::user();
         if (!$user->isAdmin() && !$user->isPrincipal()) {
             abort(403);
+        }
+
+        if ($dailyReport->status === 'draft') {
+            return redirect()->route('daily-report.show', $dailyReport)
+                ->with('error', 'Laporan yang masih draft tidak dapat di-review.');
         }
 
         $dailyReport->update(['status' => 'reviewed']);

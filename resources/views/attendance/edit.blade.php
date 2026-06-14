@@ -12,13 +12,13 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('attendance.update', $attendance) }}" method="POST">
+                <form action="{{ route('attendance.update', $attendance) }}" method="POST" class="form-confirm-edit">
                     @csrf
                     @method('PUT')
 
                     <div class="mb-3">
                         <label class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" value="{{ $attendance->date->toDateString() }}" disabled>
+                        <input type="date" name="date" class="form-control" value="{{ $attendance->date->toDateString() }}" readonly>
                     </div>
 
                     <div class="mb-3">
@@ -35,25 +35,8 @@
                         @enderror
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Jam Masuk (Check In)</label>
-                                <input type="time" name="check_in_time" class="form-control @error('check_in_time') is-invalid @enderror" value="{{ $attendance->check_in_time }}">
-                                @error('check_in_time')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Jam Keluar (Check Out)</label>
-                                <input type="time" name="check_out_time" class="form-control @error('check_out_time') is-invalid @enderror" value="{{ $attendance->check_out_time }}">
-                                @error('check_out_time')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Jam masuk dan keluar dikelola otomatis oleh sistem. Anda hanya dapat mengubah status dan catatan.
                     </div>
 
                     <div class="mb-3">

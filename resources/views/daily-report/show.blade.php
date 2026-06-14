@@ -51,19 +51,10 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-book"></i> Tujuan Pembelajaran</h5>
-            </div>
-            <div class="card-body">
-                <p>{{ $dailyReport->learning_objectives }}</p>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chalkboard"></i> Materi Pembelajaran</h5>
+                <h5 class="mb-0"><i class="fas fa-chalkboard"></i> Materi & Kegiatan Pembelajaran</h5>
             </div>
             <div class="card-body">
                 <p>{{ $dailyReport->learning_materials }}</p>
@@ -76,62 +67,6 @@
                         </a>
                     </div>
                 @endif
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-graduation-cap"></i> Metode Pembelajaran</h5>
-            </div>
-            <div class="card-body">
-                <p>{{ $dailyReport->teaching_methods }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-users"></i> Kehadiran Siswa</h5>
-            </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-md-6">
-                        <h6>Siswa Hadir</h6>
-                        <h3 class="text-success">{{ $dailyReport->attendance_count ?? '-' }}</h3>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>Total Siswa</h6>
-                        <h3 class="text-primary">{{ $dailyReport->total_students ?? '-' }}</h3>
-                    </div>
-                </div>
-                @if($dailyReport->attendance_count && $dailyReport->total_students)
-                    <hr>
-                    <p class="text-center mb-0">
-                        <strong>Persentase Kehadiran:</strong>
-                        <span class="badge bg-success">
-                            {{ number_format(($dailyReport->attendance_count / $dailyReport->total_students) * 100, 1) }}%
-                        </span>
-                    </p>
-                @endif
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-pencil"></i> Respons Siswa</h5>
-            </div>
-            <div class="card-body">
-                <p>{{ $dailyReport->student_response ?? '-' }}</p>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-tasks"></i> Tugas yang Diberikan</h5>
-            </div>
-            <div class="card-body">
-                <p>{{ $dailyReport->assignments_given ?? '-' }}</p>
             </div>
         </div>
     </div>
@@ -162,9 +97,9 @@
                 </a>
             @endif
             @if($dailyReport->status === 'submitted' && (Auth::user()->isAdmin() || Auth::user()->isPrincipal()))
-                <form action="{{ route('daily-report.review', $dailyReport) }}" method="POST" class="d-inline">
+                <form action="{{ route('daily-report.review', $dailyReport) }}" method="POST" class="d-inline form-confirm-save">
                     @csrf
-                    <button type="submit" class="btn btn-success" onclick="return confirm('Review laporan ini?')">
+                    <button type="submit" class="btn btn-success">
                         <i class="fas fa-check"></i> Review Laporan
                     </button>
                 </form>

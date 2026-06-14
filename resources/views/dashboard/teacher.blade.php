@@ -23,10 +23,10 @@
     }
 
     .teacher-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
+        background: var(--app-card-bg);
+        border: 1px solid var(--app-border);
         border-radius: 14px;
-        box-shadow: 0 16px 40px rgba(15, 23, 42, .06);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .06);
     }
 
     .teacher-metric {
@@ -44,7 +44,7 @@
     }
 
     .teacher-metric .value {
-        color: #111827;
+        color: var(--app-dark);
         font-size: 2rem;
         font-weight: 800;
         line-height: 1;
@@ -52,7 +52,7 @@
     }
 
     .teacher-metric .label {
-        color: #64748b;
+        color: var(--app-muted);
         font-size: .9rem;
         font-weight: 700;
         margin-top: 8px;
@@ -63,7 +63,7 @@
     }
 
     .panel-title {
-        color: #111827;
+        color: var(--app-dark);
         font-size: 1.1rem;
         font-weight: 800;
         margin: 0;
@@ -71,9 +71,9 @@
 
     .action-tile {
         align-items: center;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--app-border);
         border-radius: 12px;
-        color: #111827;
+        color: var(--app-dark);
         display: flex;
         font-weight: 700;
         gap: 12px;

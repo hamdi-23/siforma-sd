@@ -7,6 +7,18 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <script>
+        const storedTheme = localStorage.getItem('theme');
+        const getPreferredTheme = () => {
+            if (storedTheme) {
+                return storedTheme;
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+        document.documentElement.setAttribute('data-bs-theme', getPreferredTheme());
+    </script>
 
     <style>
         :root {
@@ -21,6 +33,30 @@
             --app-warning: #f59e0b;
             --app-info: #06b6d4;
             --sidebar-width: 276px;
+            --app-card-bg: #fff;
+            --app-hover-bg: #f1f5f9;
+            --app-table-header: #f8fafc;
+            --app-table-border: #eef2f7;
+            --app-topbar-bg: rgba(255, 255, 255, .9);
+        }
+
+        [data-bs-theme="dark"] {
+            --app-bg: #0f172a;
+            --app-border: #334155;
+            --app-dark: #f8fafc;
+            --app-muted: #cbd5e1;
+            --app-card-bg: #1e293b;
+            --app-hover-bg: #334155;
+            --app-table-header: #0f172a;
+            --app-table-border: #334155;
+            --app-topbar-bg: rgba(30, 41, 59, .9);
+            --bs-body-bg: var(--app-bg);
+            --bs-body-color: var(--app-dark);
+        }
+
+        [data-bs-theme="dark"] .bg-light {
+            background-color: var(--app-hover-bg) !important;
+            color: var(--app-dark) !important;
         }
 
         * {
@@ -43,7 +79,7 @@
         }
 
         .app-sidebar {
-            background: #fff;
+            background: var(--app-card-bg);
             border-right: 1px solid var(--app-border);
             bottom: 0;
             left: 0;
@@ -66,7 +102,7 @@
             align-items: center;
             background: var(--app-dark);
             border-radius: 12px;
-            color: #fff;
+            color: var(--app-card-bg);
             display: inline-flex;
             font-weight: 800;
             height: 44px;
@@ -120,13 +156,13 @@
         }
 
         .sidebar-nav .nav-link:hover {
-            background: #f1f5f9;
+            background: var(--app-hover-bg);
             color: var(--app-dark) !important;
         }
 
         .sidebar-nav .nav-link.active {
             background: var(--app-dark);
-            color: #fff !important;
+            color: var(--app-card-bg) !important;
             box-shadow: 0 12px 24px rgba(15, 23, 42, .14);
         }
 
@@ -163,7 +199,7 @@
 
         .topbar {
             align-items: center;
-            background: rgba(255, 255, 255, .9);
+            background: var(--app-topbar-bg);
             border-bottom: 1px solid var(--app-border);
             display: flex;
             gap: 16px;
@@ -181,7 +217,7 @@
         }
 
         .page-header {
-            background: #fff;
+            background: var(--app-card-bg);
             border: 1px solid var(--app-border);
             border-radius: 16px;
             box-shadow: 0 16px 40px rgba(15, 23, 42, .05);
@@ -213,7 +249,7 @@
         }
 
         .card-header {
-            background: #fff;
+            background: var(--app-card-bg);
             border-bottom: 1px solid var(--app-border);
             color: var(--app-dark);
             padding: 18px 20px;
@@ -230,7 +266,7 @@
         }
 
         .stat-card {
-            background: #fff;
+            background: var(--app-card-bg);
             border: 1px solid var(--app-border);
             border-radius: 16px;
             box-shadow: 0 16px 40px rgba(15, 23, 42, .05);
@@ -257,7 +293,7 @@
         }
 
         .table thead th {
-            background: #f8fafc;
+            background: var(--app-table-header);
             border-bottom: 1px solid var(--app-border);
             color: #475569;
             font-size: .78rem;
@@ -267,18 +303,19 @@
         }
 
         .table tbody td {
-            border-bottom: 1px solid #eef2f7;
-            color: #334155;
+            border-bottom: 1px solid var(--app-table-border);
+            color: var(--app-dark);
             padding: 15px 16px;
             vertical-align: middle;
         }
 
         .table tbody tr:hover {
-            background: #f8fafc;
+            background: var(--app-hover-bg);
+            color: var(--app-dark);
         }
 
         .form-label {
-            color: #334155;
+            color: var(--app-dark);
             font-size: .88rem;
             font-weight: 800;
         }
@@ -430,39 +467,71 @@
     <div class="app-shell">
         <aside class="app-sidebar">
             <a class="brand-link" href="{{ route('dashboard') }}">
-                <span class="brand-mark">SD</span>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" style="width: 42px; height: 42px; object-fit: contain; border-radius: 8px;">
+                <span class="brand-mark" style="display: none;">SD</span>
                 <span>
-                    <span class="brand-title">Siforma SD</span>
-                    <span class="brand-subtitle">Manajemen sekolah</span>
+                    <span class="brand-title">SDN Karangnunggal</span>
+                    <span class="brand-subtitle">Manajemen Sekolah</span>
                 </span>
             </a>
 
-            <div class="sidebar-label">Menu utama</div>
+            <div class="sidebar-label">Menu Utama</div>
             <nav class="sidebar-nav">
                 <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <i class="fas fa-chart-line"></i> Dashboard
                 </a>
 
                 @if(Auth::user()->isTeacher())
+                    <div class="sidebar-label mt-3">Aktivitas Harian</div>
                     <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->routeIs('attendance.*') ? 'active' : '' }}">
-                        <i class="fas fa-clock"></i> Presensi
+                        <i class="fas fa-clock"></i> Absensi Harian
                     </a>
                     <a href="{{ route('daily-report.index') }}" class="nav-link {{ request()->routeIs('daily-report.*') ? 'active' : '' }}">
-                        <i class="fas fa-file-lines"></i> Laporan Harian
+                        <i class="fas fa-book-open"></i> Jurnal Mengajar
                     </a>
+                    
+                    <div class="sidebar-label mt-3">Data & Laporan</div>
                     <a href="{{ route('monthly-recap.index') }}" class="nav-link {{ request()->routeIs('monthly-recap.*') ? 'active' : '' }}">
-                        <i class="fas fa-chart-simple"></i> Rekap Bulanan
+                        <i class="fas fa-chart-simple"></i> Rekap Kehadiran
+                    </a>
+                    <a href="{{ route('exports.index') }}" class="nav-link {{ request()->routeIs('exports.*') ? 'active' : '' }}">
+                        <i class="fas fa-file-download"></i> Riwayat Ekspor
                     </a>
                 @else
+                    <div class="sidebar-label mt-3">Pemantauan</div>
                     <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->routeIs('attendance.*') ? 'active' : '' }}">
                         <i class="fas fa-users-viewfinder"></i> Data Presensi
                     </a>
                     <a href="{{ route('daily-report.index') }}" class="nav-link {{ request()->routeIs('daily-report.*') ? 'active' : '' }}">
-                        <i class="fas fa-file-lines"></i> Laporan Guru
+                        <i class="fas fa-file-lines"></i> Laporan Jurnal Guru
                     </a>
+                    
+                    <div class="sidebar-label mt-3">Laporan & Ekspor</div>
                     <a href="{{ route('monthly-recap.index') }}" class="nav-link {{ request()->routeIs('monthly-recap.*') ? 'active' : '' }}">
-                        <i class="fas fa-chart-simple"></i> Rekap Bulanan
+                        <i class="fas fa-chart-pie"></i> Rekap Bulanan
                     </a>
+                    <a href="{{ route('exports.index') }}" class="nav-link {{ request()->routeIs('exports.*') ? 'active' : '' }}">
+                        <i class="fas fa-file-export"></i> Riwayat Ekspor
+                    </a>
+                    
+                    <div class="sidebar-label mt-3">Sistem</div>
+                    <a class="nav-link {{ request()->routeIs('classroom.*') || request()->routeIs('teachers.*') || request()->routeIs('setting.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#masterDataDesktop" role="button" aria-expanded="{{ request()->routeIs('classroom.*') || request()->routeIs('teachers.*') || request()->routeIs('setting.*') ? 'true' : 'false' }}">
+                        <i class="fas fa-database"></i> Master Data
+                        <i class="fas fa-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <div class="collapse {{ request()->routeIs('classroom.*') || request()->routeIs('teachers.*') || request()->routeIs('setting.*') ? 'show' : '' }}" id="masterDataDesktop">
+                        <div class="d-grid gap-1 ps-3 mt-1 mb-2">
+                            <a href="{{ route('classroom.index') }}" class="nav-link {{ request()->routeIs('classroom.*') ? 'active' : '' }}">
+                                <i class="fas fa-school"></i> Data Kelas
+                            </a>
+                            <a href="{{ route('teachers.index') }}" class="nav-link {{ request()->routeIs('teachers.*') ? 'active' : '' }}">
+                                <i class="fas fa-users"></i> Data Guru
+                            </a>
+                            <a href="{{ route('setting.index') }}" class="nav-link {{ request()->routeIs('setting.*') ? 'active' : '' }}">
+                                <i class="fas fa-cog"></i> Pengaturan
+                            </a>
+                        </div>
+                    </div>
                 @endif
             </nav>
 
@@ -495,11 +564,15 @@
                     </div>
                 </div>
 
-                <div class="dropdown">
-                    <button class="btn btn-light border d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-                        <span class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                        <span class="d-none d-sm-inline">{{ Auth::user()->name }}</span>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light border" id="theme-toggle" type="button" title="Ganti Tema">
+                        <i class="fas fa-moon"></i>
                     </button>
+                    <div class="dropdown">
+                        <button class="btn btn-light border d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                            <span class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                            <span class="d-none d-sm-inline">{{ Auth::user()->name }}</span>
+                        </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">{{ Auth::user()->email }}</li>
                         <li><hr class="dropdown-divider"></li>
@@ -513,6 +586,7 @@
                         </li>
                     </ul>
                 </div>
+            </div>
             </header>
 
             <div class="content-wrap">
@@ -570,12 +644,150 @@
                 <a href="{{ route('monthly-recap.index') }}" class="nav-link {{ request()->routeIs('monthly-recap.*') ? 'active' : '' }}">
                     <i class="fas fa-chart-simple"></i> Rekap Bulanan
                 </a>
+                @if(Auth::user()->isAdmin() || Auth::user()->isPrincipal())
+                    <a class="nav-link {{ request()->routeIs('classroom.*') || request()->routeIs('teachers.*') || request()->routeIs('setting.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#masterDataMobile" role="button" aria-expanded="{{ request()->routeIs('classroom.*') || request()->routeIs('teachers.*') || request()->routeIs('setting.*') ? 'true' : 'false' }}">
+                        <i class="fas fa-database"></i> Master Data
+                        <i class="fas fa-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                    </a>
+                    <div class="collapse {{ request()->routeIs('classroom.*') || request()->routeIs('teachers.*') || request()->routeIs('setting.*') ? 'show' : '' }}" id="masterDataMobile">
+                        <div class="d-grid gap-1 ps-3 mt-1">
+                            <a href="{{ route('classroom.index') }}" class="nav-link {{ request()->routeIs('classroom.*') ? 'active' : '' }}">
+                                <i class="fas fa-school"></i> Kelas
+                            </a>
+                            <a href="{{ route('teachers.index') }}" class="nav-link {{ request()->routeIs('teachers.*') ? 'active' : '' }}">
+                                <i class="fas fa-users"></i> Data Guru
+                            </a>
+                            <a href="{{ route('setting.index') }}" class="nav-link {{ request()->routeIs('setting.*') ? 'active' : '' }}">
+                                <i class="fas fa-cog"></i> Pengaturan
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </nav>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Save Confirmation
+        document.querySelectorAll('.form-confirm-save').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const submitter = e.submitter;
+                Swal.fire({
+                    title: 'Simpan Data?',
+                    text: 'Pastikan data yang Anda masukkan sudah benar.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0ea5e9',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: '<i class="fas fa-save"></i> Ya, Simpan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (submitter && submitter.name) {
+                            const hidden = document.createElement('input');
+                            hidden.type = 'hidden';
+                            hidden.name = submitter.name;
+                            hidden.value = submitter.value;
+                            form.appendChild(hidden);
+                        }
+                        HTMLFormElement.prototype.submit.call(form);
+                    }
+                });
+            });
+        });
+
+        // Edit Confirmation
+        document.querySelectorAll('.form-confirm-edit').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const submitter = e.submitter;
+                Swal.fire({
+                    title: 'Simpan Perubahan?',
+                    text: 'Data yang lama akan diperbarui.',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#f59e0b',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: '<i class="fas fa-check"></i> Ya, Perbarui!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (submitter && submitter.name) {
+                            const hidden = document.createElement('input');
+                            hidden.type = 'hidden';
+                            hidden.name = submitter.name;
+                            hidden.value = submitter.value;
+                            form.appendChild(hidden);
+                        }
+                        HTMLFormElement.prototype.submit.call(form);
+                    }
+                });
+            });
+        });
+
+        // Delete Confirmation
+        document.querySelectorAll('.form-confirm-delete').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const submitter = e.submitter;
+                Swal.fire({
+                    title: 'Hapus Data?',
+                    text: 'Data yang dihapus tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: '<i class="fas fa-trash"></i> Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (submitter && submitter.name) {
+                            const hidden = document.createElement('input');
+                            hidden.type = 'hidden';
+                            hidden.name = submitter.name;
+                            hidden.value = submitter.value;
+                            form.appendChild(hidden);
+                        }
+                        HTMLFormElement.prototype.submit.call(form);
+                    }
+                });
+            });
+        });
+
+        // Dark Mode Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        if (toggleBtn) {
+            const icon = toggleBtn.querySelector('i');
+            
+            const updateIcon = () => {
+                if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            };
+
+            updateIcon();
+
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcon();
+            });
+        }
+    });
+    </script>
+
+    @stack('scripts')
     @yield('extra_js')
 </body>
 </html>

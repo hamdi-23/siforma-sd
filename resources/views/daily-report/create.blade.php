@@ -12,7 +12,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('daily-report.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('daily-report.store') }}" method="POST" enctype="multipart/form-data" class="form-confirm-save">
                     @csrf
 
                     <div class="row">
@@ -28,7 +28,14 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Kelas <span class="text-danger">*</span></label>
-                                <input type="text" name="class" class="form-control @error('class') is-invalid @enderror" value="{{ old('class') }}" placeholder="Contoh: VI A" required>
+                                <select name="class" class="form-select @error('class') is-invalid @enderror" required>
+                                    <option value="">Pilih Kelas</option>
+                                    @foreach($classrooms as $classroom)
+                                        <option value="{{ $classroom->name }}" {{ old('class') == $classroom->name ? 'selected' : '' }}>
+                                            {{ $classroom->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('class')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -37,41 +44,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Tujuan Pembelajaran <span class="text-danger">*</span></label>
-                        <textarea name="learning_objectives" class="form-control @error('learning_objectives') is-invalid @enderror" rows="3" placeholder="Sebutkan tujuan pembelajaran" required>{{ old('learning_objectives') }}</textarea>
-                        @error('learning_objectives')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Materi Pembelajaran <span class="text-danger">*</span></label>
-                        <textarea name="learning_materials" class="form-control @error('learning_materials') is-invalid @enderror" rows="4" placeholder="Sebutkan materi yang diajarkan" required>{{ old('learning_materials') }}</textarea>
+                        <label class="form-label">Materi & Kegiatan Pembelajaran <span class="text-danger">*</span></label>
+                        <textarea name="learning_materials" class="form-control @error('learning_materials') is-invalid @enderror" rows="4" placeholder="Sebutkan materi dan ringkasan kegiatan pembelajaran hari ini" required>{{ old('learning_materials') }}</textarea>
                         @error('learning_materials')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Metode Pembelajaran <span class="text-danger">*</span></label>
-                        <textarea name="teaching_methods" class="form-control @error('teaching_methods') is-invalid @enderror" rows="3" placeholder="Contoh: Ceramah, Diskusi, Praktik" required>{{ old('teaching_methods') }}</textarea>
-                        @error('teaching_methods')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Respons Siswa</label>
-                        <textarea name="student_response" class="form-control @error('student_response') is-invalid @enderror" rows="3" placeholder="Bagaimana respons siswa terhadap pembelajaran?">{{ old('student_response') }}</textarea>
-                        @error('student_response')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Tugas yang Diberikan</label>
-                        <textarea name="assignments_given" class="form-control @error('assignments_given') is-invalid @enderror" rows="3" placeholder="Sebutkan tugas yang diberikan kepada siswa">{{ old('assignments_given') }}</textarea>
-                        @error('assignments_given')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -87,26 +62,7 @@
                         @enderror
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Jumlah Siswa Hadir</label>
-                                <input type="number" name="attendance_count" class="form-control @error('attendance_count') is-invalid @enderror" value="{{ old('attendance_count') }}" min="0">
-                                @error('attendance_count')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Total Siswa</label>
-                                <input type="number" name="total_students" class="form-control @error('total_students') is-invalid @enderror" value="{{ old('total_students') }}" min="0">
-                                @error('total_students')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div class="mb-3">
                         <label class="form-label">Catatan Tambahan</label>

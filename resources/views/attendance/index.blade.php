@@ -55,13 +55,22 @@
                 <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
             </div>
 
-            <div class="col-md-12">
-                <button type="submit" class="btn btn-primary me-2">
+            <div class="col-md-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
                     <i class="fas fa-search"></i> Cari
                 </button>
                 <a href="{{ route('attendance.index') }}" class="btn btn-secondary">
                     <i class="fas fa-redo"></i> Reset
                 </a>
+                
+                <div class="ms-auto d-flex gap-2">
+                    <a href="{{ route('attendance.export.excel', request()->all()) }}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </a>
+                    <a href="{{ route('attendance.export.pdf', request()->all()) }}" class="btn btn-danger">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </a>
+                </div>
             </div>
         </form>
     </div>
@@ -110,6 +119,16 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endif
+                                    @if(Auth::user()->isTeacher() && in_array($attendance->status, ['present', 'late']) && !$attendance->check_out_time && $attendance->date->isToday())
+                                        <form action="{{ route('attendance.checkout', $attendance) }}" method="POST" class="d-inline form-checkout">
+                                            @csrf
+                                            <input type="hidden" name="latitude" class="checkout-lat">
+                                            <input type="hidden" name="longitude" class="checkout-lng">
+                                            <button type="button" class="btn btn-sm btn-danger btn-checkout" title="Check Out Sekarang">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -130,3 +149,55 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutButtons = document.querySelectorAll('.btn-checkout');
+
+    checkoutButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Check Out Sekarang?',
+                text: 'Sistem akan mengambil lokasi GPS Anda untuk memverifikasi jarak dengan sekolah.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0ea5e9',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: '<i class="fas fa-sign-out-alt"></i> Ya, Check Out!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = button.closest('form');
+                    const latInput = form.querySelector('.checkout-lat');
+                    const lngInput = form.querySelector('.checkout-lng');
+
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                latInput.value = position.coords.latitude;
+                                lngInput.value = position.coords.longitude;
+                                form.submit();
+                            },
+                            function(error) {
+                                Swal.fire('Akses Ditolak!', 'Gagal mengambil lokasi. Mohon izinkan akses lokasi (GPS) pada browser Anda untuk melakukan Check Out.', 'error');
+                                button.disabled = false;
+                                button.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+                            },
+                            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                        );
+                    } else {
+                        Swal.fire('Error!', 'Browser Anda tidak mendukung fitur lokasi (GPS).', 'error');
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
+@endpush

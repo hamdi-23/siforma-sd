@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Siforma SD</title>
+    <title>Login - SDN Karangnunggal</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -173,8 +173,9 @@
     <main class="login-page">
         <section class="login-shell">
             <div class="login-hero">
-                <span class="brand-mark">SD</span>
-                <h1>Siforma SD</h1>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" style="width: 80px; height: 80px; object-fit: contain; border-radius: 14px;">
+                <span class="brand-mark" style="display: none; height: 80px; width: 80px; font-size: 2rem;">SD</span>
+                <h1>SDN Karangnunggal</h1>
                 <p>Sistem manajemen sekolah dasar untuk memantau presensi, laporan pembelajaran, dan rekap bulanan guru dalam satu aplikasi.</p>
 
                 <div class="feature-list">
